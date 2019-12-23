@@ -1,0 +1,494 @@
+{%- capture contentForQuerystring -%}{{ content_for_header }}{%- endcapture -%}
+{%- assign pageUrl = contentForQuerystring | split:'"pageurl":"' | last | split:'"' | first | split:'.myshopify.com' | last | replace:'\/','/' | replace:'%20',' ' | replace:'\u0026','&' -%}
+
+{%- assign url = pageUrl | split: 'collections/' -%}
+
+{% case section.settings.grid %}
+  {% when '2' %}
+    {%- assign max_height = 530 -%}
+  {% when '3' %}
+    {%- assign max_height = 345 -%}
+  {% when '4' %}
+    {%- assign max_height = 250 -%}
+  {% when '5' %}
+    {%- assign max_height = 195 -%}
+{% endcase %}
+
+{% if section.settings.layout == 'grid' %}
+  {%- assign limit = section.settings.grid | times: section.settings.rows -%}
+{% else %}
+  {%- assign limit = 16 -%}
+{% endif %}
+
+{% assign collection = collections.all %}
+
+
+{% assign full_num = collection.all_products_count %}
+
+{% paginate collection.products by limit %}
+
+
+  <div class="collection-ctn">
+    <div class="page-width page-width-max" id="Collection">
+      {% if section.settings.layout == 'grid' %}
+        {% case section.settings.grid %}
+        {% when '2' %}
+          {%- assign grid_item_width = 'medium-up--one-half' -%}
+        {% when '3' %}
+          {%- assign grid_item_width = 'small--one-half medium-up--one-third' -%}
+        {% when '4' %}
+          {%- assign grid_item_width = 'small--one-half medium-up--one-quarter' -%}
+        {% when '5' %}
+          {%- assign grid_item_width = 'small--one-half medium-up--one-fifth' -%}
+        {% endcase %}
+      <div class="cln-cf-grid">
+        <div id="gf-grid" class="collection-ctn">
+          <div class="gf-sort-wrap gf-tree gf-sort-desktop">{% include 'filter-menu' %}</div>
+          <div class="gf-sort-wrap gf-tree gf-sort-mobile"><div class="filter--title">Filter by</div></div>
+          <div class="gf-sort-mob-tree"><div class="sort-title">Sort by</div></div>
+          <div id="gf-products" class="grid grid--uniform{% if collection.products_count > 0 %} grid--view-items{% endif %}">
+            {% comment %}
+              {% assign index = 0 %}
+              {% for product in collection.products %}
+               {% include 'globofilter-product-grid' %}
+              {% endfor %}
+              {% if paginate.next %}
+                  <div id="more"><p><a href="{{ paginate.next.url }}"></a></p></div>
+              {% endif %}         
+            {% endcomment %}
+              {% for product in collection.products %}
+                {% if collection.handle == "new-arrivals" %}
+                  {% assign date_published = product.published_at | date:'%s' %}
+                  {% assign date_now = 'now' | date:'%s' %}
+                  {% assign date_difference = date_now | minus: date_published %}
+                  {% if date_difference > 3888000 %}
+                     {% continue %}
+                  {% else %}	
+                    {% include 'globofilter-product-grid' %}
+                  {% endif %}
+            	{% else %}	
+                     {% include 'globofilter-product-grid' %}
+                {% endif %}
+              {% endfor %}
+              {% assign index = 0 %}
+              {% if paginate.next %}
+               	<div id="more"><p><a href="{{ paginate.next.url }}"></a></p></div>
+              {% endif %}	             
+          </div>
+          <div style="display: none; text-align: center;" id="loading"><img width="50" height="50" src="https://cdn.shopify.com/s/files/1/0226/0165/files/loading.gif?9191023381512062911" /></div>
+        </div>
+      </div>
+      {% else %}
+
+
+      {% endif %}
+
+      {% if is_empty_collection %}
+        <div class="grid__item small--text-center">
+          <p class="text-center">{{ 'collections.general.no_matches' | t }}</p>
+        </div>
+      {% endif %}
+
+      {% if false and paginate.pages > 1 %}
+
+      {% endif %}
+    </div>
+  </div>
+  <div class="clear"></div>
+</div>
+
+{% endpaginate %}
+  
+{% schema %}
+  {
+    "name": "Collection pages",
+  "class": "main-collection-template",
+    "settings": [
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "Layout",
+        "default": "grid",
+        "options": [
+          {
+            "value": "grid",
+            "label": "Grid"
+          },
+          {
+            "value": "list",
+            "label": "List"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "grid",
+        "label": "Products per row (grid only)",
+        "default": "4",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "rows",
+        "label": "Rows per page (grid only)",
+        "default": "2",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          },
+          {
+            "value": "7",
+            "label": "7"
+          },
+          {
+            "value": "8",
+            "label": "8"
+          },
+		   {
+            "value": "9",
+            "label": "9"
+          },
+		  {
+            "value": "10",
+            "label": "10"
+          },
+          {
+            "value": "15",
+            "label": "15"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "show_collection_image",
+        "label": "Show collection image",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "label": "Show product vendors",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "sort_enable",
+        "label": "Enable sorting",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "tags_enable",
+        "label": "Enable tag filtering",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "header_enable",
+        "label": "Enable header section",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "header_txt_enable",
+        "label": "Enable header content",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "filter_main_title",
+        "label": "Filter title"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "filter_color",
+        "name": "Filter Color",
+        "settings": [
+      {
+          "type": "checkbox",
+          "id": "enable",
+          "label": "Enable",
+          "default": true
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Filter Title"
+          },
+          {
+            "type": "text",
+            "id": "list_color_name1",
+            "label": "Color name"
+          },
+          {
+            "type": "color",
+            "id": "list_color1",
+            "label": "Select color"
+          },
+          {
+            "type": "text",
+            "id": "list_color_name2",
+            "label": "Color name"
+          },
+          {
+            "type": "color",
+            "id": "list_color2",
+            "label": "Select color"
+          },
+          {
+            "type": "text",
+            "id": "list_color_name3",
+            "label": "Color name"
+          },
+          {
+            "type": "color",
+            "id": "list_color3",
+            "label": "Select color"
+          },
+          {
+            "type": "text",
+            "id": "list_color_name4",
+            "label": "Color name"
+          },
+          {
+            "type": "color",
+            "id": "list_color4",
+            "label": "Select color"
+          },
+          {
+            "type": "text",
+            "id": "list_color_name5",
+            "label": "Color name"
+          },
+          {
+            "type": "color",
+            "id": "list_color5",
+            "label": "Select color"
+          },
+          {
+            "type": "text",
+            "id": "list_color_name6",
+            "label": "Color name"
+          },
+          {
+            "type": "color",
+            "id": "list_color6",
+            "label": "Select color"
+          },
+          {
+            "type": "text",
+            "id": "list_color_name7",
+            "label": "Color name"
+          },
+          {
+            "type": "color",
+            "id": "list_color7",
+            "label": "Select color"
+          },
+          {
+            "type": "text",
+            "id": "list_color_name8",
+            "label": "Color name"
+          },
+          {
+            "type": "color",
+            "id": "list_color8",
+            "label": "Select color"
+          },
+          {
+            "type": "text",
+            "id": "list_color_name9",
+            "label": "Color name"
+          },
+          {
+            "type": "color",
+            "id": "list_color9",
+            "label": "Select color"
+          },
+          {
+            "type": "text",
+            "id": "list_color_name10",
+            "label": "Color name"
+          },
+          {
+            "type": "color",
+            "id": "list_color10",
+            "label": "Select color"
+          },
+          {
+            "type": "text",
+            "id": "list_color_name11",
+            "label": "Color name"
+          },
+          {
+            "type": "color",
+            "id": "list_color11",
+            "label": "Select color"
+          },
+          {
+            "type": "text",
+            "id": "list_color_name12",
+            "label": "Color name"
+          },
+          {
+            "type": "color",
+            "id": "list_color12",
+            "label": "Select color"
+          },
+          {
+            "type": "text",
+            "id": "list_color_name13",
+            "label": "Color name"
+          },
+          {
+            "type": "color",
+            "id": "list_color13",
+            "label": "Select color"
+          }
+        ]
+      },
+      {
+        "type": "filter_price",
+        "name": "Filter Price",
+        "settings": [
+      {
+          "type": "checkbox",
+          "id": "enable",
+          "label": "Enable",
+          "default": true
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Filter Title"
+          },
+          {
+            "type": "textarea",
+            "id": "list_tags",
+            "label": "Tag lists"
+          }
+        ]
+      },
+    {
+        "type": "filter_brand",
+        "name": "Filter Brand",
+        "settings": [
+      {
+          "type": "checkbox",
+          "id": "enable",
+          "label": "Enable",
+          "default": true
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Filter Title"
+          },
+          {
+            "type": "textarea",
+            "id": "list_tags",
+            "label": "List Tags",
+            "info": "Separate by a comma, i.e \"Dincidunteros, Nectellus, Solutmades\"."
+          }
+        ]
+      },
+      {
+        "type": "filter_collection",
+        "name": "Filter Collection",
+        "settings": [
+      {
+          "type": "checkbox",
+          "id": "enable",
+          "label": "Enable",
+          "default": true
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Filter Title"
+          },
+          {
+            "type": "link_list",
+            "id": "category_menu",
+            "label": "Category List"
+          }
+        ]
+      },
+      {
+        "type": "filter_size",
+        "name": "Filter Size",
+        "settings": [
+      {
+          "type": "checkbox",
+          "id": "enable",
+          "label": "Enable",
+          "default": true
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Filter Title"
+          },
+          {
+            "type": "textarea",
+            "id": "list_tags",
+            "label": "List Tags",
+            "info": "Separate by a comma, i.e \"Dincidunteros, Nectellus, Solutmades\"."
+          }
+        ]
+      },
+      {
+        "type": "filter_rate",
+        "name": "Filter Rate",
+        "settings": [
+      {
+          "type": "checkbox",
+          "id": "enable",
+          "label": "Enable",
+          "default": true
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Filter Rate"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
