@@ -1,0 +1,79 @@
+{% if settings.enable_glues_lead_magnet %}
+<main id="contact" class="{{page.title | handle }} merged-page-template">
+  {% include 'breadcrumb' %}
+  <section id="page-header">
+    <div class="header-background"  style="height:auto;">
+      <img class="desktop-slider"src="{{ settings.glues_lead_magnet_banner | img_url: 'master' }}" alt="Banner Image">
+      <img class="tablet-slider"src="{{ settings.glues_lead_magnet_banner_tablet | img_url: 'master' }}" alt="Banner Image">
+      <img class="mobile-slider"src="{{ settings.glues_lead_magnet_banner_mobile | img_url: 'master' }}" alt="Banner Image">
+    </div>
+  </section> 
+  {% if settings.glues_lead_magnet_countdown%}
+    {% include 'countdown' %} 
+  {% endif %}   
+  <section id="get-in-touch" class="section">    
+    <div class="container">      
+      <div class="row">
+        <div class="col-md-12 set_form">       
+          <h2 class="appreal_heading_text appgive-title">{{settings.glues_lead_magnet_formtitle}}</h2>
+          <p class="appreal_heading_text appgive-subtitle">{{settings.glues_lead_magnet_formsubtitle}}</p>
+          <form id="email_signup" class="repulicatedpagecss klaviyo_standard_embed_K3G2TU contact_form" action="//manage.kmail-lists.com/subscriptions/subscribe" data-ajax-submit="//manage.kmail-lists.com/ajax/subscriptions/subscribe" method="GET" target="_blank" novalidate="novalidate">
+            <div class="col-md-12 ">
+              <div class="set_input name_fld txt-centr">
+                <input required type="text" id="ContactFormName" name="contact[name]" placeholder="Enter Name" value="">
+              </div>
+            </div>
+            <input type="hidden" name="g" value="{{settings.glues_lead_magnet_list}}" />
+            <div class="col-md-12 ">
+              <div class="set_input email_fld txt-centr">
+                <input type="email" value="" name="email" id="k_id_email" placeholder="Your email" />
+              </div>
+            </div>
+            <div class="klaviyo_messages">
+              <div class="success_message" style="display:none;"></div>
+              <div class="error_message" style="display:none;"></div>
+            </div>
+            <div class="col-md-12 ">
+              <div class="set_input name_fld txt-centr"><button type="submit" class="btn contactbtn" style="color: #fff;background-color: #000;">GET FREE COPY</button>
+              </div>
+            </div>
+          </form>
+          <p class="appreal_heading_text appgive-subtitle">{{settings.glues_lead_magnet_afterformtitle}}</p>
+        </div>
+        <div class="grid__item medium-up--one-half contactonright ">
+           {% if page.content.size > 0 %}
+          <div class="rte">
+            {{ page.content }}
+          </div>
+        {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+  {% include 'join-the-crew' %}
+{% section 'newsletter-section' %}
+</main>
+<iframe src="https://asia.creativecdn.com/tags?id=pr_xplitdU3nLQ7IK7KFYpl&amp;ncm=1" width="1" height="1" scrolling="no" frameBorder="0" style="display: none;"></iframe>
+{% endif %}
+<style>
+  .header-background{
+    overflow:hidden;
+    text-align:center;
+  }
+  .header-background img.desktop-slider{
+    min-width: 100%;
+    min-height: 260px;
+    max-width: none;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+</style>
+<script>
+  jQuery(document).ready(function(){
+    KlaviyoSubscribe.attachToForms('.klaviyo_standard_embed_K3G2TU', {
+      hide_form_on_success: true,
+      success_message: "Great, check your email for the download link."
+    });
+  });
+</script>

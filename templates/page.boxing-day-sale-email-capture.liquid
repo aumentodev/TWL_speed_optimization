@@ -1,0 +1,68 @@
+{{ 'flipclock.css' | asset_url | stylesheet_tag }}
+{% if settings.enable_box_day_sale %}
+<main class="{{page.title | handle }} merged-page-template">
+  {% include 'breadcrumb' %}
+  <div class="section page section_set earlynot-page">     
+    <div  {% if settings.box_day_sale_background %} style="background-image: url({{ settings.box_day_sale_background | img_url: 'master' }}); background-repeat: repeat-x;" {% else %} class="appreal_page_background_set" {% endif %} >
+      <div class="page-width">
+        <div class="row">
+            <div class="content">
+              <div class="appreal_set_backdound_form">
+                <div class="appreal_text_and_form">                  
+                  <h2 class="appreal_heading_text division-title">{{ settings.box_day_sale_top-heading }}</h2>        
+                  <p class="appreal_heading_text">{{ settings.box_day_sale_top-subheading }}</p>
+                  <div class="form-holder appreal_form_set">
+                  	<div id="mc_embed_signup gg">
+                      <form id="email_signup" class="klaviyo_condensed_styling klaviyo_condensed_float klaviyo_condensed_embed_{{settings.box_klaviyo_id}}" action="//manage.kmail-lists.com/subscriptions/subscribe" data-ajax-submit="//manage.kmail-lists.com/ajax/subscriptions/subscribe" method="GET" target="_blank" novalidate="novalidate">
+                        <input type="hidden" name="g" value="{{settings.box_klaviyo_id}}">
+                        <div class="klaviyo_field_group">
+                          <div class="input-group">
+                            <input type="email" class="form-control input" name="email" id="k_id_email" placeholder="email@example.com" value="">
+                            <div class="klaviyo_messages">
+                          <div class="success_message" style="display:none;"></div>
+                          <div class="error_message" style="display:none;"></div>
+                        </div>
+                            <div class="input-group-btn klaviyo_form_actions">
+                              <button class="button button-secondary" type="submit" class="klaviyo_submit_button">{{settings.box_btn_text}}</button>
+                            </div>
+                          </div>
+                        </div>    
+                      </form>
+                      <style>
+                        .klaviyo_field_group{
+                        width:300px !important;
+                        }
+                      </style>
+                      <script type="text/javascript" src="//www.klaviyo.com/media/js/public/klaviyo_subscribe.js"></script>
+                      <script type="text/javascript">
+                        KlaviyoSubscribe.attachToForms('#email_signup', {
+                          hide_form_on_success: true
+                        });
+                      </script> 
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>  	
+{% endif %}
+
+{% if settings.early_noti_countdown %}
+  <div class="merged-page-template countdown-early-noti">
+  	{% include 'countdown' %} 
+  </div>
+{% endif %}
+
+{% include 'join-the-crew' %}
+{% section 'newsletter-section' %}
+<iframe
+src="https://asia.creativecdn.com/tags?id=pr_xplitdU3nLQ7IK7KFYpl&amp;ncm=1"
+width="1" height="1" scrolling="no" frameBorder="0" style="display: none;"></iframe>
+<style type="text/css">
+  .page-width-custom{margin-top: -18px;}
+  .breadcrumbs{top: 30px;}
+</style>
